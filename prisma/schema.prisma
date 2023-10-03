@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   firstName String @db.VarChar(255) @map("first_name")
   lastName String @db.VarChar(255) @map("last_name")
@@ -21,16 +21,16 @@ model Users {
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  customers Customers[]
-  categories Categories[]
-  products Products[]
-  invoices Invoices[]
-  invoiceProducts InvoiceProducts[]
+  customers Customer[]
+  categories Categorie[]
+  products Product[]
+  invoices Invoice[]
+  invoiceProducts InvoiceProduct[]
 
   @@map("users")
 }
 
-model Customers {
+model Customer {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId BigInt @db.UnsignedBigInt @map("user_id")
   name String @db.VarChar(255)
@@ -39,28 +39,28 @@ model Customers {
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  invoices Invoices[]
+  invoices Invoice[]
 
-  users Users @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  users User @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
 
   @@map("customers")
 }
 
-model Categories {
+model Categorie {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId BigInt @db.UnsignedBigInt @map("user_id")
   name String @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  products Products[]
+  products Product[]
 
-  users Users @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  users User @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
 
   @@map("categories")
 }
 
-model Products {
+model Product {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId BigInt @db.UnsignedBigInt @map("user_id")
   categoryId BigInt @db.UnsignedBigInt @map("category_id")
@@ -71,15 +71,15 @@ model Products {
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  invoiceProducts InvoiceProducts?
+  invoiceProducts InvoiceProduct?
 
-  users Users @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
-  categories Categories @relation(fields: [categoryId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  users User @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  categories Categorie @relation(fields: [categoryId],references: [id],onDelete: Restrict,onUpdate: Cascade)
 
   @@map("products")
 }
 
-model Invoices {
+model Invoice {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId BigInt @db.UnsignedBigInt @map("user_id")
   customerId BigInt @db.UnsignedBigInt @map("customer_id")
@@ -90,15 +90,15 @@ model Invoices {
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  invoiceProducts InvoiceProducts[]
+  invoiceProducts InvoiceProduct[]
 
-  users Users @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
-  customers Customers @relation(fields: [customerId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  users User @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  customers Customer @relation(fields: [customerId],references: [id],onDelete: Restrict,onUpdate: Cascade)
 
   @@map("invoices")
 }
 
-model InvoiceProducts{
+model InvoiceProduct {
   id BigInt @id @default(autoincrement()) @db.UnsignedBigInt
   userId BigInt @db.UnsignedBigInt @map("user_id")
   productId BigInt @unique @db.UnsignedBigInt @map("product_id")
@@ -108,9 +108,9 @@ model InvoiceProducts{
   createdAt DateTime @default(now()) @db.Timestamp(0) @map("created_at")
   updatedAt DateTime @default(now()) @db.Timestamp(0) @updatedAt @map("updated_at")
 
-  users Users @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
-  invoices Invoices @relation(fields: [invoiceId],references: [id],onDelete: Restrict,onUpdate: Cascade)
-  products Products @relation(fields: [productId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  users User @relation(fields: [userId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  invoices Invoice @relation(fields: [invoiceId],references: [id],onDelete: Restrict,onUpdate: Cascade)
+  products Product @relation(fields: [productId],references: [id],onDelete: Restrict,onUpdate: Cascade)
 
   @@map("invoice_products")
 }
